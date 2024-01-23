@@ -80,7 +80,14 @@
     "tailwindcss-animate": "^1.0.5",
     "tailwindcss-radix": "^2.8.0",
     "url": "^0.11.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "d3-force": "^3.0.0",
+    "d3-hierarchy": "^3.1.2",
+    "d3-quadtree": "^3.0.1",
+    "nanoid": "^4.0.0",
+    "reactflow": "^11.4.1",
+    "zustand": "^4.2.0",
+    "@dagrejs/dagre": "^1.0.4"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.22.15",

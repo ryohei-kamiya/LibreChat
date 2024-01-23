@@ -442,32 +442,42 @@ class BaseClient {
       });
     }
 
-    const completion = await this.sendCompletion(payload, opts);
-    const responseMessage = {
-      messageId: responseMessageId,
-      conversationId,
-      parentMessageId: userMessage.messageId,
-      isCreatedByUser: false,
-      isEdited,
-      model: this.modelOptions.model,
-      sender: this.sender,
-      text: addSpaceIfNeeded(generation) + completion,
-      promptTokens,
-    };
-
-    if (
-      tokenCountMap &&
-      this.recordTokenUsage &&
-      this.getTokenCountForResponse &&
-      this.getTokenCount
-    ) {
-      responseMessage.tokenCount = this.getTokenCountForResponse(responseMessage);
-      const completionTokens = this.getTokenCount(completion);
-      await this.recordTokenUsage({ promptTokens, completionTokens });
+    let completions = await this.sendCompletion(payload, opts);
+    if (!Array.isArray(completions)) {
+      completions = [completions];
     }
-    await this.saveMessageToDatabase(responseMessage, saveOptions, user);
-    delete responseMessage.tokenCount;
-    return responseMessage;
+    const responseMessages = [];
+    let i = 0;
+    for (const completion of completions) {
+      console.log('BasseClient.getMessage()', i, completion);
+      let responseMessage = {
+        messageId: i == 0 ? responseMessageId : crypto.randomUUID(),
+        conversationId,
+        parentMessageId: userMessage.messageId,
+        isCreatedByUser: false,
+        isEdited,
+        model: this.modelOptions.model,
+        sender: this.sender,
+        text: addSpaceIfNeeded(generation) + completion,
+        promptTokens,
+      };
+
+      if (
+        tokenCountMap &&
+        this.recordTokenUsage &&
+        this.getTokenCountForResponse &&
+        this.getTokenCount
+      ) {
+        responseMessage.tokenCount = this.getTokenCountForResponse(responseMessage);
+        const completionTokens = this.getTokenCount(completion);
+        await this.recordTokenUsage({ promptTokens, completionTokens });
+      }
+      await this.saveMessageToDatabase(responseMessage, saveOptions, user);
+      delete responseMessage.tokenCount;
+      responseMessages.push(responseMessage);
+      i += 1;
+    }
+    return responseMessages;
   }
 
   async getConversation(conversationId, user = null) {

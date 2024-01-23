@@ -58,6 +58,9 @@ export type TModels = {
 export type TModelSelectProps = TSettingsProps & TModels;
 
 export type TEditPresetProps = {
+  id?: number;
+  paramId?: string | undefined;
+  nodeId?: string | undefined;
   open: boolean;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
   preset: TPreset;
@@ -107,6 +110,9 @@ export type TOptions = {
 export type TAskFunction = (props: TAskProps, options?: TOptions) => void;
 
 export type TMessageProps = {
+  id?: number;
+  paramId?: string | undefined;
+  nodeId?: string | undefined;
   conversation?: TConversation | null;
   messageId?: string | null;
   message?: TMessage;
@@ -120,6 +126,9 @@ export type TMessageProps = {
 };
 
 export type TInitialProps = {
+  id?: number;
+  paramId?: string | undefined;
+  nodeId?: string | undefined;
   text: string;
   edit: boolean;
   error: boolean;
@@ -138,8 +147,11 @@ export type TAdditionalProps = {
 
 export type TMessageContent = TInitialProps & TAdditionalProps;
 
-export type TText = Pick<TInitialProps, 'text'>;
-export type TEditProps = Pick<TInitialProps, 'text' | 'isSubmitting'> &
+export type TText = Pick<TInitialProps, 'id' | 'paramId' | 'nodeId' | 'text'>;
+export type TEditProps = Pick<
+  TInitialProps,
+  'id' | 'paramId' | 'nodeId' | 'text' | 'isSubmitting'
+> &
   Omit<TAdditionalProps, 'isCreatedByUser'>;
 export type TDisplayProps = TText &
   Pick<TAdditionalProps, 'isCreatedByUser' | 'message'> & {

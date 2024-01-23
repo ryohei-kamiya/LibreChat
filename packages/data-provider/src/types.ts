@@ -25,6 +25,7 @@ export type TEndpointOption = {
   modelLabel?: string | null;
   jailbreak?: boolean;
   key?: string | null;
+  n?: number | null;
 };
 
 export type TSubmission = {

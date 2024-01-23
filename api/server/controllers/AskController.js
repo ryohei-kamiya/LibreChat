@@ -108,44 +108,55 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
       }),
     };
 
-    let response = await client.sendMessage(text, messageOptions);
-
-    if (overrideParentMessageId) {
-      response.parentMessageId = overrideParentMessageId;
+    let responses = await client.sendMessage(text, messageOptions);
+    if (!Array.isArray(responses)) {
+      responses = [responses];
     }
+    let i = 0;
+    const responseMessages = [];
+    for (let response of responses) {
+      if (overrideParentMessageId) {
+        response.parentMessageId = overrideParentMessageId;
+      }
 
-    if (metadata) {
-      response = { ...response, ...metadata };
-    }
+      if (metadata) {
+        response = { ...response, ...metadata };
+      }
 
-    response.endpoint = endpointOption.endpoint;
+      response.endpoint = endpointOption.endpoint;
 
-    if (client.options.attachments) {
-      userMessage.files = client.options.attachments;
-      delete userMessage.image_urls;
-    }
+      if (client.options.attachments) {
+        userMessage.files = client.options.attachments;
+        delete userMessage.image_urls;
+      }
 
-    if (!abortController.signal.aborted) {
-      sendMessage(res, {
-        title: await getConvoTitle(user, conversationId),
-        final: true,
-        conversation: await getConvo(user, conversationId),
-        requestMessage: userMessage,
-        responseMessage: response,
-      });
-      res.end();
+      if (!abortController.signal.aborted) {
+        await saveMessage({ ...response, user });
+        responseMessages.push(response);
+      }
+      if (i === responses.length - 1) {
+        if (!abortController.signal.aborted) {
+          sendMessage(res, {
+            title: await getConvoTitle(user, conversationId),
+            final: true,
+            conversation: await getConvo(user, conversationId),
+            requestMessage: userMessage,
+            responseMessage: responseMessages.length > 1 ? responseMessages : responseMessages[0],
+          });
+          res.end();
+        }
 
-      await saveMessage({ ...response, user });
-    }
+        await saveMessage(userMessage);
 
-    await saveMessage(userMessage);
-
-    if (addTitle && parentMessageId === '00000000-0000-0000-0000-000000000000' && newConvo) {
-      addTitle(req, {
-        text,
-        response,
-        client,
-      });
+        if (addTitle && parentMessageId === '00000000-0000-0000-0000-000000000000' && newConvo) {
+          addTitle(req, {
+            text,
+            response,
+            client,
+          });
+        }
+      }
+      i += 1;
     }
   } catch (error) {
     const partialText = getText && getText();

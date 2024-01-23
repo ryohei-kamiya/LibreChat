@@ -1,5 +1,8 @@
 import conversation from './conversation';
 import conversations from './conversations';
+import mindMapConversation from './mindMapConversation';
+import mindMapConversations from './mindMapConversations';
+import mindMapNode from './mindMapNode';
 import families from './families';
 import endpoints from './endpoints';
 import models from './models';
@@ -16,6 +19,9 @@ export default {
   ...families,
   ...conversation,
   ...conversations,
+  ...mindMapConversation,
+  ...mindMapConversations,
+  ...mindMapNode,
   ...endpoints,
   ...models,
   ...user,

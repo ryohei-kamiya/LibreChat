@@ -15,6 +15,11 @@ const conversationByIndex = atomFamily<TConversation | null, string | number>({
   default: null,
 });
 
+const mindMapConversationByIndex = atomFamily<TConversation | null, string | number>({
+  key: 'mindMapConversationByIndex',
+  default: null,
+});
+
 const filesByIndex = atomFamily<Map<string, ExtendedFile>, string | number>({
   key: 'filesByIndex',
   default: new Map(),
@@ -22,6 +27,11 @@ const filesByIndex = atomFamily<Map<string, ExtendedFile>, string | number>({
 
 const conversationKeysAtom = atom<(string | number)[]>({
   key: 'conversationKeys',
+  default: [],
+});
+
+const mindMapConversationKeysAtom = atom<(string | number)[]>({
+  key: 'mindMapConversationKeys',
   default: [],
 });
 
@@ -33,8 +43,23 @@ const allConversationsSelector = selector({
   },
 });
 
+const allMindMapConversationsSelector = selector({
+  key: 'allMindMapConversationsSelector',
+  get: ({ get }) => {
+    const keys = get(mindMapConversationKeysAtom);
+    return keys
+      .map((key) => get(mindMapConversationByIndex(key)))
+      .map((convo) => convo?.conversationId);
+  },
+});
+
 const presetByIndex = atomFamily<TPreset | null, string | number>({
   key: 'presetByIndex',
+  default: null,
+});
+
+const mindMapPresetByIndex = atomFamily<TPreset | null, string | number>({
+  key: 'mindMapPresetByIndex',
   default: null,
 });
 
@@ -83,6 +108,11 @@ const latestMessageFamily = atomFamily<TMessage | null, string | number | null>(
   default: null,
 });
 
+const latestMindMapMessageFamily = atomFamily<TMessage | null, string | number | null>({
+  key: 'latestMindMapMessageByIndex',
+  default: null,
+});
+
 function useCreateConversationAtom(key: string | number) {
   const [keys, setKeys] = useRecoilState(conversationKeysAtom);
   const setConversation = useSetRecoilState(conversationByIndex(key));
@@ -97,10 +127,26 @@ function useCreateConversationAtom(key: string | number) {
   return { conversation, setConversation };
 }
 
+function useCreateMindMapConversationAtom(key: string | number) {
+  const [keys, setKeys] = useRecoilState(mindMapConversationKeysAtom);
+  const setMindMapConversation = useSetRecoilState(mindMapConversationByIndex(key));
+  const mindMapConversation = useRecoilValue(mindMapConversationByIndex(key));
+
+  useEffect(() => {
+    if (!keys.includes(key)) {
+      setKeys([...keys, key]);
+    }
+  }, [key, keys, setKeys]);
+
+  return { mindMapConversation, setMindMapConversation };
+}
+
 export default {
   conversationByIndex,
+  mindMapConversationByIndex,
   filesByIndex,
   presetByIndex,
+  mindMapPresetByIndex,
   submissionByIndex,
   textByIndex,
   abortScrollFamily,
@@ -110,6 +156,9 @@ export default {
   showBingToneSettingFamily,
   showPopoverFamily,
   latestMessageFamily,
+  latestMindMapMessageFamily,
   allConversationsSelector,
+  allMindMapConversationsSelector,
   useCreateConversationAtom,
+  useCreateMindMapConversationAtom,
 };

@@ -4,6 +4,8 @@ import Chat from './Chat';
 import ChatRoute from './ChatRoute';
 import AssistantsRoute from './AssistantsRoute';
 import Search from './Search';
+import MindMapRoot from './MindMapRoot';
+import MindMapRoute from './MindMapRoute';
 import {
   Login,
   Registration,
@@ -39,6 +41,20 @@ export const router = createBrowserRouter([
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: '/m',
+        element: <MindMapRoot />,
+        children: [
+          {
+            index: true,
+            element: <Navigate to="/m/c/new" replace={true} />,
+          },
+          {
+            path: 'c/:conversationId?',
+            element: <MindMapRoute />,
+          },
+        ],
       },
       {
         path: '/',

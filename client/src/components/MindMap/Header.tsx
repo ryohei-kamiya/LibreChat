@@ -1,0 +1,28 @@
+import { useOutletContext } from 'react-router-dom';
+import type { ContextType } from '~/common';
+import { EndpointsMenu, PresetsMenu, NewMindMap } from './Menus';
+import HeaderOptions from './Input/HeaderOptions';
+
+export default function Header({
+  id = 0,
+  paramId = undefined,
+  nodeId = undefined,
+}: {
+  id: number;
+  paramId: string | undefined;
+  nodeId: string | undefined;
+}) {
+  const { navVisible } = useOutletContext<ContextType>();
+  return (
+    <div className="sticky top-0 z-10 flex h-14 w-full items-center justify-between bg-white/95 p-2 font-semibold dark:bg-gray-800/90 dark:text-white ">
+      <div className="hide-scrollbar flex items-center gap-2 overflow-x-auto">
+        {!navVisible && <NewMindMap id={id} paramId={paramId} nodeId={nodeId} />}
+        <EndpointsMenu id={id} paramId={paramId} nodeId={nodeId} />
+        <HeaderOptions id={id} paramId={paramId} nodeId={nodeId} />
+        <PresetsMenu id={id} paramId={paramId} nodeId={nodeId} />
+      </div>
+      {/* Empty div for spacing */}
+      <div />
+    </div>
+  );
+}

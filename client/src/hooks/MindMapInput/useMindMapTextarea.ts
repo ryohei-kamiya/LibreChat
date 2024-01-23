@@ -1,0 +1,130 @@
+import debounce from 'lodash/debounce';
+import { useEffect, useRef } from 'react';
+import { TEndpointOption } from 'librechat-data-provider';
+import type { KeyboardEvent } from 'react';
+import useMindMapGetSender from '~/hooks/MindMapConversations/useMindMapGetSender';
+import useFileHandling from '~/hooks/useFileHandling';
+import useLocalize from '~/hooks/useLocalize';
+import useMindMapHelpers from '~/hooks/useMindMapHelpers';
+
+type KeyEvent = KeyboardEvent<HTMLTextAreaElement>;
+
+export default function useMindMapTextarea({
+  id = 0,
+  paramId = undefined,
+  nodeId = undefined,
+  setText,
+  submitMessage,
+  disabled = false,
+}) {
+  const {
+    mindMapConversation,
+    isSubmitting,
+    latestMindMapMessage,
+    setShowBingToneSetting,
+    setFilesLoading,
+  } = useMindMapHelpers(id, paramId, nodeId);
+  const isComposing = useRef(false);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const { handleFiles } = useFileHandling();
+  const getSender = useMindMapGetSender();
+  const localize = useLocalize();
+
+  const { conversationId, jailbreak } = mindMapConversation || {};
+  const isNotAppendable =
+    (latestMindMapMessage?.unfinished && !isSubmitting) || latestMindMapMessage?.error;
+  // && (conversationId?.length ?? 0) > 6; // also ensures that we don't show the wrong placeholder
+
+  useEffect(() => {
+    if (inputRef.current?.value) {
+      return;
+    }
+
+    const getPlaceholderText = () => {
+      if (disabled) {
+        return localize('com_endpoint_config_placeholder');
+      }
+      if (isNotAppendable) {
+        return localize('com_endpoint_message_not_appendable');
+      }
+
+      const sender = getSender(mindMapConversation as TEndpointOption);
+
+      return `${localize('com_endpoint_message')} ${sender ? sender : 'ChatGPT'}…`;
+    };
+
+    const placeholder = getPlaceholderText();
+
+    if (inputRef.current?.getAttribute('placeholder') === placeholder) {
+      return;
+    }
+
+    const setPlaceholder = () => {
+      const placeholder = getPlaceholderText();
+
+      if (inputRef.current?.getAttribute('placeholder') !== placeholder) {
+        inputRef.current?.setAttribute('placeholder', placeholder);
+      }
+    };
+
+    const debouncedSetPlaceholder = debounce(setPlaceholder, 80);
+    debouncedSetPlaceholder();
+
+    return () => debouncedSetPlaceholder.cancel();
+  }, [mindMapConversation, disabled, latestMindMapMessage, isNotAppendable, localize, getSender]);
+
+  const handleKeyDown = (e: KeyEvent) => {
+    if (e.key === 'Enter' && isSubmitting) {
+      return;
+    }
+
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+    }
+
+    if (e.key === 'Enter' && !e.shiftKey && !isComposing?.current) {
+      submitMessage();
+    }
+  };
+
+  const handleKeyUp = (e: KeyEvent) => {
+    const target = e.target as HTMLTextAreaElement;
+
+    if (e.keyCode === 8 && target.value.trim() === '') {
+      setText(target.value);
+    }
+
+    if (e.key === 'Enter' && e.shiftKey) {
+      return console.log('Enter + Shift');
+    }
+
+    if (isSubmitting) {
+      return;
+    }
+  };
+
+  const handleCompositionStart = () => {
+    isComposing.current = true;
+  };
+
+  const handleCompositionEnd = () => {
+    isComposing.current = false;
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    if (e.clipboardData && e.clipboardData.files.length > 0) {
+      e.preventDefault();
+      setFilesLoading(true);
+      handleFiles(e.clipboardData.files);
+    }
+  };
+
+  return {
+    inputRef,
+    handleKeyDown,
+    handleKeyUp,
+    handlePaste,
+    handleCompositionStart,
+    handleCompositionEnd,
+  };
+}

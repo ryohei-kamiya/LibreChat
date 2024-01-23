@@ -71,6 +71,7 @@ class OpenAIClient extends BaseClient {
         temperature:
           typeof modelOptions.temperature === 'undefined' ? 0.8 : modelOptions.temperature,
         top_p: typeof modelOptions.top_p === 'undefined' ? 1 : modelOptions.top_p,
+        n: typeof modelOptions.n === 'undefined' ? 1 : modelOptions.n,
         presence_penalty:
           typeof modelOptions.presence_penalty === 'undefined' ? 1 : modelOptions.presence_penalty,
         stop: modelOptions.stop,
@@ -547,7 +548,7 @@ class OpenAIClient extends BaseClient {
     this.modelOptions.user = this.user;
     const invalidBaseUrl = this.completionsUrl && extractBaseURL(this.completionsUrl) === null;
     const useOldMethod = !!(invalidBaseUrl || !this.isChatCompletion);
-    if (typeof opts.onProgress === 'function' && useOldMethod) {
+    if (this.modelOptions.n === 1 && typeof opts.onProgress === 'function' && useOldMethod) {
       await this.getCompletion(
         payload,
         (progressMessage) => {
@@ -583,7 +584,10 @@ class OpenAIClient extends BaseClient {
         },
         opts.abortController || new AbortController(),
       );
-    } else if (typeof opts.onProgress === 'function' || this.options.useChatCompletion) {
+    } else if (
+      this.modelOptions.n === 1 &&
+      (typeof opts.onProgress === 'function' || this.options.useChatCompletion)
+    ) {
       reply = await this.chatCompletion({
         payload,
         clientOptions: opts,
@@ -599,18 +603,29 @@ class OpenAIClient extends BaseClient {
 
       logger.debug('[OpenAIClient] sendCompletion: result', result);
 
-      if (this.isChatCompletion) {
-        reply = result.choices[0].message.content;
-      } else {
-        reply = result.choices[0].text.replace(this.endToken, '');
+      const repries = [];
+      if (result.choices) {
+        for (let i = 0; i < result.choices.length; i++) {
+          const choice = result.choices[i];
+          if (this.isChatCompletion) {
+            if (choice.message) {
+              repries.push(choice.message.content.trim());
+            }
+          } else {
+            if (choice.text) {
+              repries.push(choice.text.replace(this.endToken, '').trim());
+            }
+          }
+        }
       }
+      return repries; // TODO: Improve response types
     }
 
     if (streamResult && typeof opts.addMetadata === 'function') {
       const { finish_reason } = streamResult.choices[0];
       opts.addMetadata({ finish_reason });
     }
-    return reply.trim();
+    return reply.trim(); // TODO: Improve response types
   }
 
   initializeLLM({

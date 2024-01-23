@@ -45,6 +45,7 @@ class ChatGPTClient extends BaseClient {
       model: modelOptions.model || CHATGPT_MODEL,
       temperature: typeof modelOptions.temperature === 'undefined' ? 0.8 : modelOptions.temperature,
       top_p: typeof modelOptions.top_p === 'undefined' ? 1 : modelOptions.top_p,
+      n: modelOptions.n ?? 1,
       presence_penalty:
         typeof modelOptions.presence_penalty === 'undefined' ? 1 : modelOptions.presence_penalty,
       stop: modelOptions.stop,
@@ -145,8 +146,10 @@ class ChatGPTClient extends BaseClient {
       abortController = new AbortController();
     }
     const modelOptions = { ...this.modelOptions };
-    if (typeof onProgress === 'function') {
+    if (modelOptions.n === 1 && typeof onProgress === 'function') {
       modelOptions.stream = true;
+    } else {
+      modelOptions.stream = false;
     }
     if (this.isChatGptModel) {
       modelOptions.messages = input;
