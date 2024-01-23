@@ -1,11 +1,21 @@
 import { useEffect } from 'react';
 import type { ExtendedFile } from '~/common';
-import { useDragHelpers, useSetFilesToDelete } from '~/hooks';
+import { useMindMapDragHelpers, useSetFilesToDelete } from '~/hooks';
 import DragDropOverlay from './Input/Files/DragDropOverlay';
 import { useDeleteFilesMutation } from '~/data-provider';
 
-export default function Presentation({ children }: { children: React.ReactNode }) {
-  const { isOver, canDrop, drop } = useDragHelpers();
+export default function Presentation({
+  id = 0,
+  paramId = undefined,
+  nodeId = undefined,
+  children,
+}: {
+  id?: number;
+  paramId?: string | undefined;
+  nodeId?: string | undefined;
+  children: React.ReactNode;
+}) {
+  const { isOver, canDrop, drop } = useMindMapDragHelpers(id, paramId, nodeId);
   const setFilesToDelete = useSetFilesToDelete();
   const { mutateAsync } = useDeleteFilesMutation({
     onSuccess: () => {

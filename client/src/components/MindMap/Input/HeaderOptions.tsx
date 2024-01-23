@@ -30,7 +30,7 @@ export default function OptionsBar({
 
   const { showPopover, setShowPopover, setShowBingToneSetting } = useMindMapNodeHandler(nodeId);
   const { mindMapConversation, latestMindMapMessage } = useMindMapHelpers(id, paramId, nodeId);
-  const { setOption } = useMindMapSetIndexOptions();
+  const { setOption } = useMindMapSetIndexOptions(id, paramId, nodeId);
 
   const { endpoint, conversationId, jailbreak } = mindMapConversation ?? {};
 
@@ -101,7 +101,7 @@ export default function OptionsBar({
               visible={showPopover}
               saveAsPreset={saveAsPreset}
               closePopover={() => setShowPopover(false)}
-              PopoverButtons={<PopoverButtons id={id} paramId={paramId} nodeId={nodeId} />}
+              PopoverButtons={<PopoverButtons />}
             >
               <div className="px-4 py-4">
                 <EndpointSettings

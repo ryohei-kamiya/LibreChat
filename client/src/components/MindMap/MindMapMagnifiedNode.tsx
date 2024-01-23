@@ -1,4 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
+import type { TMessage } from 'librechat-data-provider';
 import { useMindMapHelpers, useMindMapNodeHandler } from '~/hooks';
 // import GenerationButtons from './Input/GenerationButtons';
 import MessagesView from './Messages/MessagesView';
@@ -22,7 +23,7 @@ function MindMapChatNode({ id, data }: { id: string; data: NodeData }) {
 
   return (
     <MindMapContext.Provider value={useMindMapHelpers(0, conversationId, id)}>
-      <Presentation>
+      <Presentation id={0} paramId={conversationId} nodeId={id}>
         {messagesTree && messagesTree.length > 0 ? (
           <MessagesView
             nodeId={id}
@@ -43,13 +44,16 @@ function MindMapChatNode({ id, data }: { id: string; data: NodeData }) {
         !messagesTree[0].children ||
         messagesTree[0].children.length === 0 ||
         (showStopButton && isSubmitting) ? (
-            mindMapNodes.length <= 1 || (mindMapNodes.length > 1 && (nodeIndex ?? 0 > 0)) ? (
-              <div className="w-full border-t-0 pl-0 pt-2 dark:border-white/20 md:w-[calc(100%-.5rem)] md:border-t-0 md:border-transparent md:pl-0 md:pt-0 md:dark:border-transparent">
-                <ChatForm nodeId={id} data={data} />
-              </div>
-            ) : (
-              <></>
-            )
+            mindMapNodes.length <= 1 ||
+          (mindMapNodes.length > 1 &&
+            messagesTree &&
+            (messagesTree as TMessage[])[0].parentMessageId !== store.initNodeId) ? (
+                <div className="w-full border-t-0 pl-0 pt-2 dark:border-white/20 md:w-[calc(100%-.5rem)] md:border-t-0 md:border-transparent md:pl-0 md:pt-0 md:dark:border-transparent">
+                  <ChatForm nodeId={id} data={data} />
+                </div>
+              ) : (
+                <></>
+              )
           ) : (
             <></>
           )}

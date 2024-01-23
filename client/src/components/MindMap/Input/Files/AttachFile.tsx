@@ -1,16 +1,22 @@
 import { EModelEndpoint, supportsFiles } from 'librechat-data-provider';
 import { AttachmentIcon } from '~/components/svg';
 import { FileUpload } from '~/components/ui';
-import { useFileHandling } from '~/hooks';
+import { useMindMapFileHandling } from '~/hooks';
 
 export default function AttachFile({
+  id = 0,
+  paramId = undefined,
+  nodeId = undefined,
   endpoint,
   disabled = false,
 }: {
+  id?: number;
+  paramId?: string | undefined;
+  nodeId?: string | undefined;
   endpoint: EModelEndpoint | '';
   disabled?: boolean | null;
 }) {
-  const { handleFileChange } = useFileHandling();
+  const { handleFileChange } = useMindMapFileHandling(id, paramId, nodeId);
   if (!supportsFiles[endpoint]) {
     return null;
   }

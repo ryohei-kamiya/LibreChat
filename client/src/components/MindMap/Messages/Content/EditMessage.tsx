@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { EModelEndpoint } from 'librechat-data-provider';
 import { useUpdateMessageMutation } from 'librechat-data-provider/react-query';
-import Container from '~/components/Messages/Content/Container';
+import Container from '~/components/MindMapMessages/Content/Container';
 import type { TEditProps } from '~/common';
 import { useLocalize, useMindMapHelpers } from '~/hooks';
 
@@ -104,7 +104,7 @@ const EditMessage = ({
           }
           onClick={resubmitMessage}
         >
-          {localize('com_ui_save')} {'&'} {localize('com_ui_submit')}
+          {localize('com_ui_save_submit')}
         </button>
         <button
           className="btn btn-secondary relative mr-2"

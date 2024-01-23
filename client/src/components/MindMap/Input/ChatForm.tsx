@@ -1,6 +1,5 @@
 import { useRecoilState } from 'recoil';
 import type { ChangeEvent } from 'react';
-import { TMessage } from 'librechat-data-provider';
 import { useMindMapRequiresKey, useMindMapHelpers, useMindMapNodeHandler } from '~/hooks';
 import AttachFile from './Files/AttachFile';
 import StopButton from './StopButton';
@@ -65,7 +64,13 @@ export default function ChatForm({ nodeId, data }: { nodeId: string; data: NodeD
                 endpoint={endpoint}
               />
             )}
-            <AttachFile endpoint={endpoint ?? ''} disabled={requiresKey} />
+            <AttachFile
+              id={0}
+              paramId={conversationId}
+              nodeId={nodeId}
+              endpoint={endpoint ?? ''}
+              disabled={requiresKey}
+            />
             {isSubmitting && showStopButton ? (
               <StopButton stop={handleStopGenerating} setShowStopButton={setShowStopButton} />
             ) : (

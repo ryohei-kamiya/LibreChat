@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { MessagesSquared, GPTIcon } from '~/components/svg';
 import { useMindMapHelpers, useMindMapNodeHandler } from '~/hooks';
 import { Button } from '~/components/ui';
+import { useLocalize } from '~/hooks';
 import { cn } from '~/utils/';
 
 type TPopoverButton = {
@@ -28,8 +29,10 @@ export default function PopoverButtons({
   const { optionSettings, setOptionSettings, showAgentSettings, setShowAgentSettings } =
     useMindMapNodeHandler(nodeId);
   const { mindMapConversation } = useMindMapHelpers(id, paramId, nodeId);
+  const localize = useLocalize();
 
-  const { model, endpoint } = mindMapConversation ?? {};
+  const { model, endpoint: _endpoint, endpointType } = mindMapConversation ?? {};
+  const endpoint = endpointType ?? _endpoint;
   const isGenerativeModel = model?.toLowerCase()?.includes('gemini');
   const isChatModel = !isGenerativeModel && model?.toLowerCase()?.includes('chat');
   const isTextModel = !isGenerativeModel && !isChatModel && /code|text/.test(model ?? '');
@@ -43,7 +46,7 @@ export default function PopoverButtons({
   const buttons: { [key: string]: TPopoverButton[] } = {
     [EModelEndpoint.google]: [
       {
-        label: (showExamples ? 'Hide' : 'Show') + ' Examples',
+        label: localize(showExamples ? 'com_hide_examples' : 'com_show_examples'),
         buttonClass: isGenerativeModel || isTextModel ? 'disabled' : '',
         handler: triggerExamples,
         icon: <MessagesSquared className={cn('mr-1 w-[14px]', iconClass)} />,
@@ -51,7 +54,9 @@ export default function PopoverButtons({
     ],
     [EModelEndpoint.gptPlugins]: [
       {
-        label: `Show ${showAgentSettings ? 'Completion' : 'Agent'} Settings`,
+        label: localize(
+          showAgentSettings ? 'com_show_completion_settings' : 'com_show_agent_settings',
+        ),
         buttonClass: '',
         handler: () => setShowAgentSettings((prev) => !prev),
         icon: <GPTIcon className={cn('mr-1 w-[14px]', iconClass)} size={24} />,
@@ -72,7 +77,7 @@ export default function PopoverButtons({
     <div>
       {endpointButtons.map((button, index) => (
         <Button
-          key={`${endpoint}-button-${index}`}
+          key={`button-${index}`}
           type="button"
           className={cn(
             button.buttonClass,

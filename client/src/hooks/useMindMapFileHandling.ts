@@ -1,6 +1,9 @@
 import { v4 } from 'uuid';
 import debounce from 'lodash/debounce';
-import React, { useState, useEffect, useCallback } from 'react';
+import { QueryKeys } from 'librechat-data-provider';
+import { useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect, useCallback } from 'react';
+import type { TFile } from 'librechat-data-provider';
 import type { ExtendedFile } from '~/common';
 import { useToastContext } from '~/Providers/ToastContext';
 import { useUploadImageMutation } from '~/data-provider';
@@ -20,6 +23,7 @@ export default function useMindMapFileHandling(
   paramId: string | undefined = undefined,
   nodeId: string | undefined = undefined,
 ) {
+  const queryClient = useQueryClient();
   const { showToast } = useToastContext();
   const [errors, setErrors] = useState<string[]>([]);
   const setError = (error: string) => setErrors((prevErrors) => [...prevErrors, error]);
@@ -120,6 +124,9 @@ export default function useMindMapFileHandling(
         filepath: data.filepath,
       });
 
+      const _files = queryClient.getQueryData<TFile[]>([QueryKeys.files]) ?? [];
+      queryClient.setQueryData([QueryKeys.files], [..._files, data]);
+
       setTimeout(() => {
         updateFileById(data.temp_file_id, {
           progress: 1,
@@ -130,6 +137,7 @@ export default function useMindMapFileHandling(
           height: data.height,
           width: data.width,
           filename: data.filename,
+          source: data.source,
         });
       }, 300);
     },

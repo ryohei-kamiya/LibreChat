@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { EModelEndpoint } from 'librechat-data-provider';
 import { useGetEndpointsQuery } from 'librechat-data-provider/react-query';
 import type { TPreset } from 'librechat-data-provider';
-import { useLocalize, useUserKey, useDefaultConvo, useMindMapHelpers } from '~/hooks';
+import { useLocalize, useMindMapUserKey, useDefaultMindMapConvo, useMindMapHelpers } from '~/hooks';
 import { SetKeyDialog } from '~/components/MindMapInput/SetKeyDialog';
 import { cn, getEndpointField } from '~/utils';
 import { icons } from './Icons';
@@ -39,9 +39,9 @@ export default function MenuItem({
   const [isDialogOpen, setDialogOpen] = useState(false);
   const { data: endpointsConfig } = useGetEndpointsQuery();
   const { mindMapConversation, newMindMapConversation } = useMindMapHelpers(id, paramId, nodeId);
-  const getDefaultConversation = useDefaultConvo();
+  const getDefaultConversation = useDefaultMindMapConvo();
 
-  const { getExpiry } = useUserKey(endpoint);
+  const { getExpiry } = useMindMapUserKey(endpoint);
   const localize = useLocalize();
   const expiryTime = getExpiry();
 

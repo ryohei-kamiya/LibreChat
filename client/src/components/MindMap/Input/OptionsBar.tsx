@@ -31,7 +31,7 @@ export default function OptionsBar({
 
   const { showPopover, setShowPopover, setShowBingToneSetting } = useMindMapNodeHandler(nodeId);
   const { mindMapConversation, latestMindMapMessage } = useMindMapHelpers(id, paramId, nodeId);
-  const { setOption } = useMindMapSetIndexOptions();
+  const { setOption } = useMindMapSetIndexOptions(id, paramId, nodeId);
 
   const { endpoint, conversationId, jailbreak } = mindMapConversation ?? {};
 

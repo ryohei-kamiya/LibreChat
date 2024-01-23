@@ -111,9 +111,6 @@ const PresetItems: FC<{
                 <div key={`preset-${preset.presetId}`}>
                   <Flipped flipId={preset.presetId}>
                     <MenuItem
-                      id={id}
-                      paramId={paramId}
-                      nodeId={nodeId}
                       key={`preset-item-${preset.presetId}`}
                       textClassName="text-xs max-w-[150px] sm:max-w-[200px] truncate md:max-w-full "
                       title={getPresetTitle(preset)}

@@ -28,8 +28,16 @@ export default function useMindMapHelpers(
   nodeId: string | undefined = undefined,
 ) {
   const { data: endpointsConfig = {} as TEndpointsConfig } = useGetEndpointsQuery();
-  const { files, isSubmitting, setFiles, setShowStopButton, setFilesLoading, setIsSubmitting } =
-    useMindMapNodeHandler(nodeId);
+  const {
+    files,
+    setFiles,
+    isSubmitting,
+    setIsSubmitting,
+    showStopButton,
+    setShowStopButton,
+    filesLoading,
+    setFilesLoading,
+  } = useMindMapNodeHandler(nodeId);
   const setFilesToDelete = useSetFilesToDelete();
   const getSender = useMindMapGetSender();
 
@@ -138,7 +146,7 @@ export default function useMindMapHelpers(
       isEdited = false,
     } = {},
   ) => {
-    console.log('ask', text, parentMessageId);
+    console.log('ask', text, parentMessageId, isSubmitting, isEdited, isContinued);
     setShowStopButton(true);
     if (!!isSubmitting || text === '') {
       return;
@@ -333,11 +341,6 @@ export default function useMindMapHelpers(
   };
 
   const initMindMapNodeStates = () => {
-    resetLatestMindMapMessage();
-    setFiles(new Map());
-    setShowStopButton(false);
-    setFilesLoading(false);
-    setIsSubmitting(false);
     setSubmission(null);
   };
 

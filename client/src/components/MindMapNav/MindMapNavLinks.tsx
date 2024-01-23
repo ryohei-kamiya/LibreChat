@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react';
 import { useGetUserBalance, useGetStartupConfig } from 'librechat-data-provider/react-query';
 import type { TConversation } from 'librechat-data-provider';
-import { ExportMindMapModal } from './ExportMindMapConversation';
+import { ExportModal } from './ExportConversation';
 import { LinkIcon, GearIcon } from '~/components';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { useLocalize } from '~/hooks';
@@ -28,8 +28,8 @@ function MindMapNavLinks() {
 
   let conversation;
   const activeConvo = useRecoilValue(store.mindMapConversationByIndex(0));
-  const globalConvo = useRecoilValue(store.conversation) ?? ({} as TConversation);
-  if (location.state?.from?.pathname.includes('/mindmap')) {
+  const globalConvo = useRecoilValue(store.mindMapConversation) ?? ({} as TConversation);
+  if (location.state?.from?.pathname.includes('/chat')) {
     conversation = globalConvo;
   } else {
     conversation = activeConvo;
@@ -134,11 +134,7 @@ function MindMapNavLinks() {
         )}
       </Menu>
       {showExports && (
-        <ExportMindMapModal
-          open={showExports}
-          onOpenChange={setShowExports}
-          conversation={conversation}
-        />
+        <ExportModal open={showExports} onOpenChange={setShowExports} conversation={conversation} />
       )}
       {showSettings && <Settings open={showSettings} onOpenChange={setShowSettings} />}
     </>

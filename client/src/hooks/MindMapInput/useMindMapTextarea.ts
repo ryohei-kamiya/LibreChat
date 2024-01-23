@@ -6,6 +6,7 @@ import useMindMapGetSender from '~/hooks/MindMapConversations/useMindMapGetSende
 import useFileHandling from '~/hooks/useFileHandling';
 import useLocalize from '~/hooks/useLocalize';
 import useMindMapHelpers from '~/hooks/useMindMapHelpers';
+import useMindMapNodeHandler from '~/hooks/useMindMapNodeHandler';
 
 type KeyEvent = KeyboardEvent<HTMLTextAreaElement>;
 
@@ -17,13 +18,8 @@ export default function useMindMapTextarea({
   submitMessage,
   disabled = false,
 }) {
-  const {
-    mindMapConversation,
-    isSubmitting,
-    latestMindMapMessage,
-    setShowBingToneSetting,
-    setFilesLoading,
-  } = useMindMapHelpers(id, paramId, nodeId);
+  const { mindMapConversation, latestMindMapMessage } = useMindMapHelpers(id, paramId, nodeId);
+  const { isSubmitting, setShowBingToneSetting, setFilesLoading } = useMindMapNodeHandler(nodeId);
   const isComposing = useRef(false);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const { handleFiles } = useFileHandling();
@@ -34,6 +30,32 @@ export default function useMindMapTextarea({
   const isNotAppendable =
     (latestMindMapMessage?.unfinished && !isSubmitting) || latestMindMapMessage?.error;
   // && (conversationId?.length ?? 0) > 6; // also ensures that we don't show the wrong placeholder
+
+  // auto focus to input, when enter a conversation.
+  useEffect(() => {
+    if (!conversationId) {
+      return;
+    }
+
+    // Prevents Settings from not showing on new conversation, also prevents showing toneStyle change without jailbreak
+    if (conversationId === 'new' || !jailbreak) {
+      setShowBingToneSetting(false);
+    }
+
+    if (conversationId !== 'search') {
+      inputRef.current?.focus();
+    }
+    // setShowBingToneSetting is a recoil setter, so it doesn't need to be in the dependency array
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversationId, jailbreak]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, [isSubmitting]);
 
   useEffect(() => {
     if (inputRef.current?.value) {

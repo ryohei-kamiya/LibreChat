@@ -23,7 +23,7 @@ export default function EditPresetDialog({
 }) {
   const localize = useLocalize();
   const { mindMapPreset } = useMindMapNodeHandler(nodeId);
-  const { setOption } = useMindMapSetIndexOptions(mindMapPreset);
+  const { setOption } = useMindMapSetIndexOptions(id, paramId, nodeId, mindMapPreset);
   const [presetModalVisible, setPresetModalVisible] = useRecoilState(store.presetModalVisible);
 
   const { data: availableEndpoints = [] } = useGetEndpointsQuery({
@@ -82,9 +82,6 @@ export default function EditPresetDialog({
                     {'ㅤ'}
                   </Label>
                   <PopoverButtons
-                    id={id}
-                    paramId={paramId}
-                    nodeId={nodeId}
                     buttonClass="ml-0 w-full dark:bg-gray-700 dark:hover:bg-gray-800 p-2 h-[40px] justify-center mt-0"
                     iconClass="hidden lg:block w-4"
                   />

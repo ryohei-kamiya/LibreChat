@@ -13,6 +13,7 @@ export default function MultiMessage({
   currentEditId,
   setCurrentEditId,
   isSearchView,
+  ...props
 }: TMessageProps) {
   const [siblingIdx, setSiblingIdx] = useRecoilState(
     store.mindMapMessagesSiblingIdxFamily(messageId),
@@ -45,6 +46,9 @@ export default function MultiMessage({
         {messagesTree
           ? messagesTree.map((message) => (
             <Message
+              id={props.id}
+              paramId={props.paramId}
+              nodeId={props.nodeId}
               key={message.messageId}
               conversation={conversation}
               message={message}
@@ -62,6 +66,9 @@ export default function MultiMessage({
   }
   return (
     <Message
+      id={props.id}
+      paramId={props.paramId}
+      nodeId={props.nodeId}
       key={message.messageId}
       conversation={conversation}
       message={message}

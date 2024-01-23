@@ -181,6 +181,9 @@ export default function Message(props: TMessageProps) {
               {/* Legacy Plugins */}
               {message?.plugin && <Plugin plugin={message?.plugin} />}
               <MessageContent
+                id={props.id}
+                paramId={props.paramId}
+                nodeId={props.nodeId}
                 ask={ask}
                 edit={edit}
                 isLast={isLast}

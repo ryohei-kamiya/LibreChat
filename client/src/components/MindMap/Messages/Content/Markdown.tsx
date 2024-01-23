@@ -1,3 +1,4 @@
+import { useRecoilValue } from 'recoil';
 import React, { useState, useEffect } from 'react';
 import type { TMessage } from 'librechat-data-provider';
 import rehypeHighlight from 'rehype-highlight';
@@ -9,8 +10,9 @@ import remarkMath from 'remark-math';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { useMindMapHelpers, useMindMapNodeHandler } from '~/hooks';
-import { langSubset, validateIframe } from '~/utils';
 import CodeBlock from '~/components/MindMapMessages/Content/CodeBlock';
+import { langSubset, validateIframe, processLaTeX } from '~/utils';
+import store from '~/store';
 
 type TCodeProps = {
   inline: boolean;
@@ -54,11 +56,15 @@ const Markdown = React.memo(
     const [cursor, setCursor] = useState('█');
     const { isSubmitting } = useMindMapNodeHandler(nodeId);
     const { latestMindMapMessage } = useMindMapHelpers(id, paramId, nodeId);
+    const LaTeXParsing = useRecoilValue<boolean>(store.LaTeXParsing);
+
     const isInitializing = content === '<span className="result-streaming">█</span>';
 
     const { isEdited, messageId } = message ?? {};
     const isLatestMessage = messageId === latestMindMapMessage?.messageId;
-    const currentContent = content?.replace('z-index: 1;', '') ?? '';
+
+    const _content = content?.replace('z-index: 1;', '') ?? '';
+    const currentContent = LaTeXParsing ? processLaTeX(_content) : _content;
 
     useEffect(() => {
       let timer1: NodeJS.Timeout, timer2: NodeJS.Timeout;

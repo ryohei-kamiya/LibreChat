@@ -1,6 +1,7 @@
 import { v4 } from 'uuid';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import {
   /* @ts-ignore */
   SSE,
@@ -444,6 +445,7 @@ export default function useMindMapSSE(
 
     setIsSubmitting(true);
     events.stream();
+    console.log(submission);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submission]);

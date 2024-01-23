@@ -29,6 +29,7 @@ export { default as useMindMapNodeHandler } from './useMindMapNodeHandler';
 export { default as useGenerations } from './useGenerations';
 export { default as useMindMapGenerations } from './useMindMapGenerations';
 export { default as useDragHelpers } from './useDragHelpers';
+export { default as useMindMapDragHelpers } from './useMindMapDragHelpers';
 export { default as useScrollToRef } from './useScrollToRef';
 export { default as useLocalStorage } from './useLocalStorage';
 export { default as useConversation } from './useConversation';

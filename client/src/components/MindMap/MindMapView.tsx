@@ -2,6 +2,7 @@ import Dagre from '@dagrejs/dagre';
 import { memo } from 'react';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import type { TMessage } from 'librechat-data-provider';
 import { useGetMessagesByConvoId } from 'librechat-data-provider/react-query';
 import { useMindMapNodeHandler } from '~/hooks';
 import { useGetFiles } from '~/data-provider';
@@ -23,8 +24,6 @@ import ReactFlow, {
   ControlButton,
   useNodes,
 } from 'reactflow';
-
-import { TMessage } from 'librechat-data-provider';
 import type { NodeData } from '~/store/mindMapNode';
 
 import MindMapNode from './MindMapNode';

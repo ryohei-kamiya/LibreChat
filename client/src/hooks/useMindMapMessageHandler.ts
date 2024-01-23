@@ -63,7 +63,7 @@ export default function useMindMapMessageHandler(
     const isEditOrContinue = isEdited || isContinued;
 
     // set the endpoint option
-    const convo = parseConvo({ endpoint, conversation: currentMindMapConversation });
+    const convo = parseConvo(endpoint, currentMindMapConversation);
     const endpointOption = {
       ...convo,
       endpoint,
@@ -106,6 +106,7 @@ export default function useMindMapMessageHandler(
       messageId: responseMessageId ?? `${isRegenerate ? messageId : fakeMessageId}_`,
       conversationId,
       unfinished: false,
+      submitting: true,
       isCreatedByUser: false,
       isEdited: isEditOrContinue,
       error: false,

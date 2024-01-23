@@ -3,7 +3,17 @@ import { supportsFiles } from 'librechat-data-provider';
 import { cn, removeFocusOutlines } from '~/utils';
 import { useMindMapTextarea } from '~/hooks';
 
-export default function Textarea({ value, disabled, onChange, setText, submitMessage, endpoint }) {
+export default function Textarea({
+  id = 0,
+  paramId = undefined,
+  nodeId = undefined,
+  value,
+  disabled,
+  onChange,
+  setText,
+  submitMessage,
+  endpoint,
+}) {
   const {
     inputRef,
     handlePaste,
@@ -11,12 +21,11 @@ export default function Textarea({ value, disabled, onChange, setText, submitMes
     handleKeyDown,
     handleCompositionStart,
     handleCompositionEnd,
-  } = useMindMapTextarea({ setText, submitMessage, disabled });
+  } = useMindMapTextarea({ id, paramId, nodeId, setText, submitMessage, disabled });
 
   return (
     <TextareaAutosize
       ref={inputRef}
-      name="mindMapChatTextArea"
       autoFocus
       value={value}
       disabled={!!disabled}
@@ -26,7 +35,7 @@ export default function Textarea({ value, disabled, onChange, setText, submitMes
       onKeyDown={handleKeyDown}
       onCompositionStart={handleCompositionStart}
       onCompositionEnd={handleCompositionEnd}
-      // id="prompt-textarea"
+      id="prompt-textarea"
       tabIndex={0}
       data-testid="text-input"
       style={{ height: 44, overflowY: 'auto' }}
