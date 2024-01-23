@@ -332,10 +332,6 @@ export default function useMindMapHelpers(
     setSiblingIdx(0);
   };
 
-  const [showBingToneSetting, setShowBingToneSetting] = useRecoilState(
-    store.showBingToneSettingFamily(index),
-  );
-
   const initMindMapNodeStates = () => {
     resetLatestMindMapMessage();
     setFiles(new Map());

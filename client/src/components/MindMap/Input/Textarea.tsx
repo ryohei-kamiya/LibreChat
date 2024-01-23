@@ -16,6 +16,7 @@ export default function Textarea({ value, disabled, onChange, setText, submitMes
   return (
     <TextareaAutosize
       ref={inputRef}
+      name="mindMapChatTextArea"
       autoFocus
       value={value}
       disabled={!!disabled}

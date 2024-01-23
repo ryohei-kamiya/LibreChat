@@ -21,11 +21,11 @@ import DragIcon from './DragIcon';
 function MindMapChatNode({ id, data }: { id: string; data: NodeData }) {
   const { messagesTree, conversationId, nodeIndex } = data;
   const submissionAtNode = useRecoilValue(store.submissionByNodeId(id));
-  const { showStopButton, isSubmitting } = useMindMapNodeHandler(id);
+  const { showStopButton, isSubmitting, mindMapNodes } = useMindMapNodeHandler(id);
   const { initMindMapNodeStates } = useMindMapHelpers(0, conversationId, id);
   useEffect(() => {
     initMindMapNodeStates();
-  }, []);
+  }, [id, messagesTree]);
   useMindMapSSE(submissionAtNode, 0, id);
 
   return (
@@ -51,9 +51,13 @@ function MindMapChatNode({ id, data }: { id: string; data: NodeData }) {
         !messagesTree[0].children ||
         messagesTree[0].children.length === 0 ||
         (showStopButton && isSubmitting) ? (
-            <div className="w-full border-t-0 pl-0 pt-2 dark:border-white/20 md:w-[calc(100%-.5rem)] md:border-t-0 md:border-transparent md:pl-0 md:pt-0 md:dark:border-transparent">
-              <ChatForm nodeId={id} data={data} />
-            </div>
+            mindMapNodes.length <= 1 || (mindMapNodes.length > 1 && (nodeIndex ?? 0 > 0)) ? (
+              <div className="w-full border-t-0 pl-0 pt-2 dark:border-white/20 md:w-[calc(100%-.5rem)] md:border-t-0 md:border-transparent md:pl-0 md:pt-0 md:dark:border-transparent">
+                <ChatForm nodeId={id} data={data} />
+              </div>
+            ) : (
+              <></>
+            )
           ) : (
             <></>
           )}
@@ -73,8 +77,8 @@ const MindMapNode: React.FC<NodeProps<NodeData>> = ({ id, data }) => {
         <div
           id={id}
           style={{
-            minWidth: 800,
-            maxWidth: 1000,
+            width: 1000,
+            height: 400,
             position: 'relative',
             zIndex: 10,
             display: 'flex',
@@ -101,6 +105,7 @@ const MindMapNode: React.FC<NodeProps<NodeData>> = ({ id, data }) => {
               pointerEvents: 'all',
               cursor: 'default',
               width: '100%',
+              height: '100%',
             }}
           >
             <MindMapChatNode id={id} data={data} />

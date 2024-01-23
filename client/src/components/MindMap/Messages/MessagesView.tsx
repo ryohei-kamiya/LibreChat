@@ -104,7 +104,13 @@ export default function MessagesView({
             width: '100%',
           }}
         >
-          <div className="flex flex-col pb-9 text-sm dark:bg-transparent">
+          <div
+            className="flex flex-col pb-9 text-sm dark:bg-transparent"
+            style={{
+              height: '100%',
+              width: '100%',
+            }}
+          >
             {(_messagesTree && _messagesTree?.length == 0) || _messagesTree === null ? (
               <div className="flex w-full items-center justify-center gap-1 bg-gray-50 p-3 text-sm text-gray-500 dark:border-gray-900/50 dark:bg-gray-800 dark:text-gray-300">
                 Nothing found
@@ -113,6 +119,10 @@ export default function MessagesView({
               <>
                 {Header && Header}
                 <div
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                  }}
                   ref={screenshotTargetRef}
                   onPointerOver={(e: React.PointerEvent<HTMLDivElement>) => handlePointerOver(e)}
                   onPointerLeave={(e: React.PointerEvent<HTMLDivElement>) => handlePointerLeave(e)}

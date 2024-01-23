@@ -21,6 +21,7 @@ import ReactFlow, {
   Panel,
   useReactFlow,
   ControlButton,
+  useNodes,
 } from 'reactflow';
 
 import { TMessage } from 'librechat-data-provider';
@@ -32,6 +33,7 @@ import MindMapMagnifiedNode from './MindMapMagnifiedNode';
 
 // we need to import the React Flow styles to make it work
 import 'reactflow/dist/style.css';
+import { options } from '../Input/ModelSelect/options';
 
 const nodeTypes = {
   mindmap: MindMapNode,
@@ -51,27 +53,9 @@ g.setDefaultEdgeLabel(function () {
   return {};
 });
 
-function getApproximateNodeSize(node: Node<NodeData>) {
-  let textlength = 0;
-  if (node.data.messagesTree) {
-    node.data.messagesTree.forEach((message) => {
-      if (!message.text) {
-        return;
-      }
-      textlength += message.text.length;
-      message.children?.forEach((child) => {
-        if (!child.text) {
-          return;
-        }
-        textlength += child.text.length;
-        child.children?.forEach((grandchild) => {
-          textlength += grandchild.text.length;
-        });
-      });
-    });
-  }
-  const width = textlength > 50 ? 1000 : Math.max(textlength * 20, 1000);
-  const height = textlength > 50 ? textlength * 1.3 : 200;
+function getNodeSize(node: Node<NodeData>) {
+  const width = 1000;
+  const height = 400;
   return { width, height };
 }
 
@@ -85,7 +69,7 @@ function getLayoutedElements(nodes: Node<NodeData>[], edges: Edge[], direction: 
   g.setGraph({ rankdir: direction });
 
   edges.forEach((edge) => g.setEdge(edge.source, edge.target));
-  nodes.forEach((node) => g.setNode(node.id, { label: node.id, ...getApproximateNodeSize(node) }));
+  nodes.forEach((node) => g.setNode(node.id, { label: node.id, ...getNodeSize(node) }));
 
   Dagre.layout(g);
   const rootNode = nodes.find((node) => node.data!.nodeIndex === 0) ?? nodes[0];
@@ -125,6 +109,8 @@ function convertMessagesTreeToNodesAndEdges(
         nodeIndex: nodeIndex,
         isNew: true,
       },
+      width: 1000,
+      height: 400,
       position: { x: 0, y: 0 },
       dragHandle: '.dragHandle',
     };
@@ -181,6 +167,8 @@ function convertMessagesTreeToNodesAndEdges(
             nodeIndex: 0,
             isNew: true,
           },
+          width: 1000,
+          height: 400,
           position: { x: 0, y: 0 },
           dragHandle: '.dragHandle',
         },
@@ -222,7 +210,8 @@ function convertMessagesTreeToNodesAndEdges(
 function Flow() {
   const { conversationId } = useParams();
 
-  const { fitView } = useReactFlow();
+  // const { fitView } = useReactFlow();
+  // const nodes = useNodes();
   const {
     onNodesChange,
     onEdgesChange,
@@ -259,9 +248,6 @@ function Flow() {
     setMindMapNodes(initNodes);
     setMindMapEdges(initEdges);
 
-    // setTimeout(() => {
-    //   fitView();
-    // }, 100);
     console.log(messagesTree);
   }, [messagesTree, setMindMapNodes, setMindMapEdges]);
 

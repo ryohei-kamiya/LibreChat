@@ -18,7 +18,7 @@ import { Close } from '@radix-ui/react-toast';
 
 function MindMapChatNode({ id, data }: { id: string; data: NodeData }) {
   const { messagesTree, conversationId, nodeIndex } = data;
-  const { showStopButton, isSubmitting } = useMindMapNodeHandler(id);
+  const { showStopButton, isSubmitting, mindMapNodes } = useMindMapNodeHandler(id);
 
   return (
     <MindMapContext.Provider value={useMindMapHelpers(0, conversationId, id)}>
@@ -43,9 +43,13 @@ function MindMapChatNode({ id, data }: { id: string; data: NodeData }) {
         !messagesTree[0].children ||
         messagesTree[0].children.length === 0 ||
         (showStopButton && isSubmitting) ? (
-            <div className="w-full border-t-0 pl-0 pt-2 dark:border-white/20 md:w-[calc(100%-.5rem)] md:border-t-0 md:border-transparent md:pl-0 md:pt-0 md:dark:border-transparent">
-              <ChatForm nodeId={id} data={data} />
-            </div>
+            mindMapNodes.length <= 1 || (mindMapNodes.length > 1 && (nodeIndex ?? 0 > 0)) ? (
+              <div className="w-full border-t-0 pl-0 pt-2 dark:border-white/20 md:w-[calc(100%-.5rem)] md:border-t-0 md:border-transparent md:pl-0 md:pt-0 md:dark:border-transparent">
+                <ChatForm nodeId={id} data={data} />
+              </div>
+            ) : (
+              <></>
+            )
           ) : (
             <></>
           )}
@@ -84,9 +88,9 @@ function MindMapMagnifiedNode() {
   useEffect(() => {
     if (!isMindMapMagnifiedNodeCloseButtonPressed) {
       setStyle({
-        maxHeight: '100%',
-        minWidth: 300,
-        maxWidth: 1000,
+        height: '100%',
+        minWidth: '300px',
+        maxWidth: '1000px',
         position: 'absolute',
         top: 0,
         left: 0,
@@ -101,7 +105,7 @@ function MindMapMagnifiedNode() {
       });
     } else {
       setStyle({
-        maxHeight: '100%',
+        height: '100%',
         minWidth: 300,
         maxWidth: 1000,
         position: 'relative',

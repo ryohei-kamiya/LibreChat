@@ -4,18 +4,12 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useGetModelsQuery, useGetSearchEnabledQuery } from 'librechat-data-provider/react-query';
 import type { ContextType } from '~/common';
-import {
-  useAuthContext,
-  useServerStream,
-  useMindMapConversation,
-  useMindMapNodeHandler,
-} from '~/hooks';
+import { useAuthContext, useServerStream, useMindMapNodeHandler } from '~/hooks';
 import { MindMapNav, MobileMindMapNav } from '~/components/MindMapNav';
 import store from '~/store';
 
 export default function MindMapRoot() {
   const location = useLocation();
-  const { newMindMapConversation } = useMindMapConversation();
   const { isAuthenticated } = useAuthContext();
   const [navVisible, setNavVisible] = useState(() => {
     const savedNavVisible = localStorage.getItem('navVisible');
