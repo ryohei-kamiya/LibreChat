@@ -2,7 +2,7 @@ import { v4 } from 'uuid';
 import React, { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { QueryKeys, parseCompactConvo } from 'librechat-data-provider';
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState, useSetRecoilState, useRecoilCallback } from 'recoil';
 import { useGetMessagesByConvoId, useGetEndpointsQuery } from 'librechat-data-provider/react-query';
 import type {
   TMessage,
@@ -135,6 +135,16 @@ export default function useMindMapHelpers(
   // );
   const { getExpiry } = useMindMapUserKey(endpoint ?? '');
   const setSubmission = useSetRecoilState(store.submissionByNodeId(nodeId ?? store.initNodeId));
+
+  const resetSubmissions = useRecoilCallback(
+    ({ reset }) =>
+      (nodeIds: string[]) => {
+        nodeIds.forEach((nodeId) => {
+          reset(store.submissionByNodeId(nodeId));
+        });
+      },
+    [],
+  );
 
   const ask: TAskFunction = (
     { text, parentMessageId = null, conversationId = null, messageId = null },
@@ -354,6 +364,7 @@ export default function useMindMapHelpers(
     getMessages,
     setMessages,
     setSiblingIdx,
+    resetSubmissions,
     latestMindMapMessage,
     setLatestMindMapMessage,
     resetLatestMindMapMessage,

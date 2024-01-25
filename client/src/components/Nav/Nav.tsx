@@ -1,6 +1,7 @@
 import { useSearchQuery, useGetConversationsQuery } from 'librechat-data-provider/react-query';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import type { TConversation, TSearchResults } from 'librechat-data-provider';
 import {
   useAuthContext,
@@ -8,6 +9,7 @@ import {
   useConversation,
   useConversations,
   useLocalStorage,
+  useMindMapOriginNavigate,
 } from '~/hooks';
 import { TooltipProvider, Tooltip } from '~/components/ui';
 import { Conversations, Pages } from '../Conversations';
@@ -28,6 +30,9 @@ export default function Nav({ navVisible, setNavVisible }) {
   const scrollPositionRef = useRef<number | null>(null);
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
   const [newUser, setNewUser] = useLocalStorage('newUser', true);
+  const navigate = useMindMapOriginNavigate();
+  const { conversationId: paramId } = useParams<{ conversationId: string }>();
+  const setSubmission = useSetRecoilState(store.submission);
 
   useEffect(() => {
     if (isSmallScreen) {
@@ -156,6 +161,12 @@ export default function Nav({ navVisible, setNavVisible }) {
     }
   };
 
+  const switchToMindMapViewHandler = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setSubmission(null);
+    navigate('/m/c/' + (paramId ?? 'new'));
+  };
+
   const containerClasses =
     getConversationsQuery.isLoading && pageNumber === 1
       ? 'flex flex-col gap-2 text-gray-100 text-sm h-full justify-center items-center'
@@ -183,6 +194,16 @@ export default function Nav({ navVisible, setNavVisible }) {
                 )}
               >
                 <nav className="relative flex h-full flex-1 flex-col space-y-1 p-2">
+                  <div className="mb-1 flex h-11 flex-row">
+                    <a
+                      href="/"
+                      data-testid="switch-to-chat-view-button"
+                      onClick={switchToMindMapViewHandler}
+                      className="flex h-11 flex-shrink-0 flex-grow cursor-pointer items-center gap-3 rounded-md border border-white/20 px-3 py-3 text-sm text-white transition-colors duration-200 hover:bg-gray-500/10"
+                    >
+                      Switch to MindMap View
+                    </a>
+                  </div>
                   <div className="mb-1 flex h-11 flex-row">
                     <NewChat toggleNav={itemToggleNav} />
                   </div>

@@ -1,10 +1,10 @@
 import Dagre from '@dagrejs/dagre';
-import { memo } from 'react';
-import { useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import type { TMessage } from 'librechat-data-provider';
 import { useGetMessagesByConvoId } from 'librechat-data-provider/react-query';
-import { useMindMapNodeHandler } from '~/hooks';
+import { useMindMapNodeHandler, useMindMapHelpers } from '~/hooks';
 import { useGetFiles } from '~/data-provider';
 import { buildTree, mapFiles } from '~/utils';
 import store from '~/store';
@@ -32,7 +32,6 @@ import MindMapMagnifiedNode from './MindMapMagnifiedNode';
 
 // we need to import the React Flow styles to make it work
 import 'reactflow/dist/style.css';
-import { options } from '../Input/ModelSelect/options';
 
 const nodeTypes = {
   mindmap: MindMapNode,
@@ -219,6 +218,9 @@ function Flow() {
     mindMapNodes,
     mindMapEdges,
   } = useMindMapNodeHandler();
+  const setSubmission = useSetRecoilState(store.submission);
+  const setSubmissionAtIndex = useSetRecoilState(store.submissionByIndex(0));
+  const { resetSubmissions } = useMindMapHelpers(0, conversationId ?? '', store.initNodeId);
 
   const onSortView = () => {
     const layoutedNodesAndEdges = getLayoutedElements(mindMapNodes, mindMapEdges, 'TB');
@@ -244,6 +246,9 @@ function Flow() {
       mindMapEdges,
       messagesTree ?? [],
     );
+    setSubmissionAtIndex(null);
+    setSubmission(null);
+    resetSubmissions(mindMapNodes.map((node) => node.id));
     setMindMapNodes(initNodes);
     setMindMapEdges(initEdges);
 
