@@ -53,6 +53,7 @@ librechat.yaml
 
 # Environment
 .npmrc
+.node-version
 .env*
 my.secrets
 !**/.env.example
@@ -62,6 +63,7 @@ api/data/
 owner.yml
 archive
 .vscode/settings.json
+.vscode/launch.json
 src/style - official.css
 /e2e/specs/.test-results/
 /e2e/playwright-report/
