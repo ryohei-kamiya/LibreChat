@@ -603,22 +603,22 @@ class OpenAIClient extends BaseClient {
 
       logger.debug('[OpenAIClient] sendCompletion: result', result);
 
-      const repries = [];
+      const replies = [];
       if (result.choices) {
         for (let i = 0; i < result.choices.length; i++) {
           const choice = result.choices[i];
           if (this.isChatCompletion) {
             if (choice.message) {
-              repries.push(choice.message.content.trim());
+              replies.push(choice.message.content.trim());
             }
           } else {
             if (choice.text) {
-              repries.push(choice.text.replace(this.endToken, '').trim());
+              replies.push(choice.text.replace(this.endToken, '').trim());
             }
           }
         }
       }
-      return repries; // TODO: Improve response types
+      return replies; // TODO: Improve response types
     }
 
     if (streamResult && typeof opts.addMetadata === 'function') {
