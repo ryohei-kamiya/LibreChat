@@ -248,12 +248,15 @@ function Flow() {
     );
     setSubmissionAtIndex(null);
     setSubmission(null);
-    resetSubmissions(mindMapNodes.map((node) => node.id));
     setMindMapNodes(initNodes);
     setMindMapEdges(initEdges);
 
     console.log(messagesTree);
   }, [messagesTree, setMindMapNodes, setMindMapEdges]);
+
+  useEffect(() => {
+    resetSubmissions(mindMapNodes.map((node) => node.id));
+  }, []);
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
