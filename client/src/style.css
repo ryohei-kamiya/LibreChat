@@ -1996,3 +1996,79 @@ html {
     vertical-align:baseline
   }
 }
+
+.react-flow__renderer {
+  overflow: hidden;
+  position: relative;
+  z-index: 0;
+}
+
+.react-flow__node-mindmap {
+  background: white;
+  border-radius: 2px;
+  border: none;
+  padding: 0;
+  font-weight: 700;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.react-flow__handle.target {
+  top: 50%;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1;
+}
+
+.react-flow__handle.source {
+  top: 0;
+  left: 0;
+  transform: none;
+  background: white;
+  height: 100%;
+  width: 100%;
+  border-radius: 2px;
+  border: none;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.react-flow .react-flow__connectionline {
+  z-index: 0;
+}
+
+.mindMapCloseMagnifiedNodeButton {
+  background: #f6ad55;
+  width: 42px;
+  height: 42px;
+  padding: 2px 0 2px 0;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  pointer-events: all;
+  border-radius: 2px 0 0 2px;
+  z-index: 1100;
+  font-size: 0.6rem;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.mindMapCloseMagnifiedNodeButton svg {
+  margin: 0 0 0 9px;
+  padding: 0 4px;
+}
+
+.mindMapDragHandle {
+  background: #f6ad55;
+  width: 42px;
+  margin-right: 0;
+  display: flex;
+  justify-content: left;
+  pointer-events: all;
+  border-radius: 2px 0 0 2px;
+  z-index: 20;
+  cursor: grab;
+}

@@ -3,6 +3,7 @@ import Root from './Root';
 import Chat from './Chat';
 import ChatRoute from './ChatRoute';
 import Search from './Search';
+import MindMapRoute from './MindMapRoute';
 import {
   Login,
   Registration,
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
           {
             path: 'search/:query?',
             element: <Search />,
+          },
+          {
+            path: 'm/:conversationId?',
+            element: <MindMapRoute />,
           },
         ],
       },

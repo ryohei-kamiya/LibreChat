@@ -11,6 +11,7 @@ import search from './search';
 import preset from './preset';
 import lang from './language';
 import settings from './settings';
+import mindMapNode from './mindMapNode';
 
 export default {
   ...families,
@@ -26,4 +27,5 @@ export default {
   ...preset,
   ...lang,
   ...settings,
+  ...mindMapNode,
 };
