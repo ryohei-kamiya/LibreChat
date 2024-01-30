@@ -39,7 +39,7 @@ const edgeTypes = {
 };
 
 const nodeOrigin: NodeOrigin = [0.5, 0.5];
-const connectionLineStyle = { stroke: '#F6AD55', strokeWidth: 3 };
+const connectionLineStyle = { stroke: '#000000', strokeWidth: 3 };
 const defaultEdgeOptions = { style: connectionLineStyle, type: 'mindmap' };
 
 const g = new Dagre.graphlib.Graph();

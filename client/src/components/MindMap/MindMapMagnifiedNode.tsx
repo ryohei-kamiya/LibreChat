@@ -65,7 +65,7 @@ function MindMapMagnifiedNode() {
         zIndex: 1000,
         display: 'flex',
         borderRadius: '2px',
-        border: '1px solid #f6ad55',
+        border: '1px solid #000000',
         background: '#fff',
         padding: 0,
         margin: 0,
@@ -80,7 +80,7 @@ function MindMapMagnifiedNode() {
         zIndex: 1000,
         display: 'none',
         borderRadius: '2px',
-        border: '1px solid #f6ad55',
+        border: '1px solid #000000',
         background: '#fff',
         padding: 0,
         margin: 0,
@@ -120,7 +120,10 @@ function MindMapMagnifiedNode() {
             e.stopPropagation();
           }}
         >
-          <div className="mindMapCloseMagnifiedNodeButton" onPointerUp={handlePointerUp}>
+          <div
+            className="mindMapCloseMagnifiedNodeButton dark bg-black"
+            onPointerUp={handlePointerUp}
+          >
             ESC
             <CloseIcon />
           </div>

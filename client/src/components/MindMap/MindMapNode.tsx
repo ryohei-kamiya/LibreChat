@@ -89,14 +89,14 @@ const MindMapNode: React.FC<NodeProps<NodeData>> = ({ id, data }) => {
             zIndex: 10,
             display: 'flex',
             borderRadius: '2px',
-            border: '1px solid #f6ad55',
+            border: '1px solid #000000',
             background: '#fff',
             padding: 0,
             margin: 0,
             pointerEvents: 'all',
           }}
         >
-          <div className="mindMapDragHandle">
+          <div className="mindMapDragHandle dark bg-black">
             <DragIcon />
           </div>
           <div

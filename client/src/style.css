@@ -2038,7 +2038,6 @@ html {
 }
 
 .mindMapCloseMagnifiedNodeButton {
-  background: #f6ad55;
   width: 42px;
   height: 42px;
   padding: 2px 0 2px 0;
@@ -2062,7 +2061,6 @@ html {
 }
 
 .mindMapDragHandle {
-  background: #f6ad55;
   width: 42px;
   margin-right: 0;
   display: flex;
