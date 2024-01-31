@@ -1,42 +1,87 @@
 import React, { memo, useState, useEffect } from 'react';
-import useChatHelpers from '~/hooks/useChatHelpers';
 import useMindMapHelpers from '~/hooks/useMindMapHelpers';
-// import GenerationButtons from '~/components/Chat/Input/GenerationButtons';
-import MessagesView from '~/components/Chat/Messages/MessagesView';
-// import OptionsBar from '~/components/Chat/Input/OptionsBar';
-import { ChatContext } from '~/Providers';
-import Presentation from '~/components/Chat/Presentation';
-import ChatForm from '~/components/Chat/Input/ChatForm';
-import Landing from '~/components/Chat/Landing';
-import Header from '~/components/Chat/Header';
-import Footer from '~/components/Chat/Footer';
+import Message from '~/components/Messages/Message';
+import ScrollToBottom from '~/components/Messages/ScrollToBottom';
+import { useScreenshot, useMessageScrolling } from '~/hooks';
+import { CSSTransition } from 'react-transition-group';
 import type { NodeData } from '~/store/mindMapNode';
 import { useRecoilValue } from 'recoil';
 import store from '~/store';
 import CloseIcon from './CloseIcon';
 
-function MindMapChatNode({ id, data }: { id: string; data: NodeData }) {
-  const { messagesTree, conversationId } = data;
+function MindMapNodeMessages({ id, data }: { id: string; data: NodeData }) {
+  const { messagesTree } = data;
 
-  // const chatHelpers = useChatHelpers(id, conversationId);  // not working now
-  const chatHelpers = useChatHelpers(0, conversationId);
+  const { screenshotTargetRef } = useScreenshot();
+  const [currentEditId, setCurrentEditId] = useState<number | string | null>(-1);
+
+  const {
+    conversation,
+    scrollableRef,
+    messagesEndRef,
+    showScrollButton,
+    handleSmoothToRef,
+    debouncedHandleScroll,
+  } = useMessageScrolling(messagesTree);
+
+  if (!(messagesTree && messagesTree?.length)) {
+    return null;
+  }
+
+  const message = !(messagesTree && messagesTree?.length) ? null : messagesTree[0];
 
   return (
-    <ChatContext.Provider value={chatHelpers}>
-      <Presentation>
-        {messagesTree && messagesTree.length !== 0 ? (
-          <MessagesView messagesTree={messagesTree} Header={<Header />} />
-        ) : (
-          <Landing Header={<Header />} />
-        )}
-        {/* <OptionsBar messagesTree={messagesTree} /> */}
-        {/* <GenerationButtons endpoint={chatHelpers.conversation.endpoint ?? ''} /> */}
-        <div className="w-full border-t-0 pl-0 pt-2 dark:border-white/20 md:w-[calc(100%-.5rem)] md:border-t-0 md:border-transparent md:pl-0 md:pt-0 md:dark:border-transparent">
-          {/* <ChatForm index={id} /> */}
-          {/* <Footer /> */}
+    <div className="flex-1 overflow-hidden overflow-y-auto">
+      <div className="dark:gpt-dark-gray relative h-full">
+        <div
+          onScroll={debouncedHandleScroll}
+          ref={scrollableRef}
+          style={{
+            height: '100%',
+            overflowY: 'auto',
+            width: '100%',
+          }}
+        >
+          <div className="flex h-full flex-col pb-9 text-sm dark:bg-transparent">
+            {!message ? (
+              <div className="flex w-full items-center justify-center gap-1 bg-gray-50 p-3 text-sm text-gray-500 dark:border-gray-900/50 dark:bg-gray-800 dark:text-gray-300">
+                Nothing found
+              </div>
+            ) : (
+              <>
+                <div ref={screenshotTargetRef}>
+                  <Message
+                    key={message.messageId}
+                    conversation={conversation}
+                    message={{
+                      ...message,
+                      bg: 'w-full text-gray-800 group border-black/10 dark:border-gray-900/50 dark:text-gray-100 bg-white dark:bg-gray-800 dark:text-gray-20',
+                    }}
+                    currentEditId={currentEditId}
+                    setCurrentEditId={setCurrentEditId}
+                    siblingIdx={0}
+                    siblingCount={messagesTree.length}
+                  />
+                </div>
+              </>
+            )}
+            <div
+              className="dark:gpt-dark-gray group h-0 w-full flex-shrink-0 dark:border-gray-900/50"
+              ref={messagesEndRef}
+            />
+          </div>
         </div>
-      </Presentation>
-    </ChatContext.Provider>
+        <CSSTransition
+          in={showScrollButton}
+          timeout={400}
+          classNames="scroll-down"
+          unmountOnExit={false}
+          // appear
+        >
+          {() => showScrollButton && <ScrollToBottom scrollHandler={handleSmoothToRef} />}
+        </CSSTransition>
+      </div>
+    </div>
   );
 }
 
@@ -141,7 +186,7 @@ function MindMapMagnifiedNode() {
               width: '100%',
             }}
           >
-            <MindMapChatNode id={mindMapMagnifiedNodeId} data={mindMapNodeData} />
+            <MindMapNodeMessages id={mindMapMagnifiedNodeId} data={mindMapNodeData} />
           </div>
         </div>
       )}
