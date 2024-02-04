@@ -2,12 +2,13 @@ import { useRecoilValue } from 'recoil';
 import { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import {
-  useGetConvoIdQuery,
   useGetModelsQuery,
+  useGetStartupConfig,
   useGetEndpointsQuery,
 } from 'librechat-data-provider/react-query';
-import { TPreset } from 'librechat-data-provider';
+import type { TPreset } from 'librechat-data-provider';
 import { useNewConvo, useConfigOverride } from '~/hooks';
+import { useGetConvoIdQuery } from '~/data-provider';
 import useMindMapHelpers from '~/hooks/useMindMapHelpers';
 import MindMapView from '~/components/MindMap/MindMapView';
 import useAuthRedirect from './useAuthRedirect';
@@ -18,6 +19,8 @@ export default function MindMapRoute() {
   const index = 0;
   useConfigOverride();
   const { conversationId } = useParams();
+  const { data: startupConfig } = useGetStartupConfig();
+
   const { conversation } = store.useCreateConversationAtom(index);
   const modelsQueryEnabled = useRecoilValue(store.modelsQueryEnabled);
   const { isAuthenticated } = useAuthRedirect();
@@ -30,6 +33,13 @@ export default function MindMapRoute() {
     enabled: isAuthenticated && conversationId !== 'new',
   });
   const endpointsQuery = useGetEndpointsQuery({ enabled: isAuthenticated && modelsQueryEnabled });
+
+  useEffect(() => {
+    if (startupConfig?.appTitle) {
+      document.title = startupConfig.appTitle;
+      localStorage.setItem('appTitle', startupConfig.appTitle);
+    }
+  }, [startupConfig]);
 
   useEffect(() => {
     if (
