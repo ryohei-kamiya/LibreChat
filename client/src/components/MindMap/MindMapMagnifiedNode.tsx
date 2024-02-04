@@ -7,7 +7,7 @@ import { CSSTransition } from 'react-transition-group';
 import type { NodeData } from '~/store/mindMapNode';
 import { useRecoilValue } from 'recoil';
 import store from '~/store';
-import CloseIcon from './CloseIcon';
+import CrossIcon from '~/components/svg/CrossIcon';
 
 function MindMapNodeMessages({ id, data }: { id: string; data: NodeData }) {
   const { messagesTree } = data;
@@ -170,7 +170,7 @@ function MindMapMagnifiedNode() {
             onPointerUp={handlePointerUp}
           >
             ESC
-            <CloseIcon />
+            <CrossIcon className="mindMapCloseMagnifiedNodeButtonIcon" />
           </div>
           <div
             style={{

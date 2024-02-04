@@ -9,7 +9,7 @@ import store from '~/store';
 
 import { Handle, Position, NodeProps } from 'reactflow';
 
-import DragIcon from './DragIcon';
+import MindMapDragIcon from '~/components/svg/MindMapDragIcon';
 
 function MindMapNodeMessages({ id, data }: { id: string; data: NodeData }) {
   const { messagesTree } = data;
@@ -136,7 +136,7 @@ const MindMapNode: React.FC<NodeProps<NodeData>> = ({ id, data }) => {
           }}
         >
           <div className="mindMapDragHandle dark bg-black">
-            <DragIcon />
+            <MindMapDragIcon />
           </div>
           <div
             style={{

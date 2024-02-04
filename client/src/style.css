@@ -2055,9 +2055,11 @@ html {
   cursor: pointer;
 }
 
-.mindMapCloseMagnifiedNodeButton svg {
+.mindMapCloseMagnifiedNodeButtonIcon {
   margin: 0 0 0 9px;
   padding: 0 4px;
+  width: 24px;
+  height: 24px;
 }
 
 .mindMapDragHandle {

@@ -1,8 +1,8 @@
 // icon taken from grommet https://icons.grommet.io
 
-function SortIcon() {
+function MindMapSortIcon({ className = '' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24">
+    <svg viewBox="0 0 24 24" className={className}>
       <path
         fill="none"
         stroke="#000"
@@ -13,4 +13,4 @@ function SortIcon() {
   );
 }
 
-export default SortIcon;
+export default MindMapSortIcon;

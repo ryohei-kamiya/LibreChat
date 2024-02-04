@@ -8,7 +8,7 @@ import { useGetFiles } from '~/data-provider';
 import { buildTree, mapFiles } from '~/utils';
 import useMindMapHelpers from '~/hooks/useMindMapHelpers';
 import store from '~/store';
-import SortIcon from './SortIcon';
+import MindMapSortIcon from '../svg/MindMapSortIcon';
 
 import { Spinner } from '~/components/svg';
 
@@ -276,7 +276,7 @@ function Flow() {
           >
             <Controls showInteractive={true}>
               <ControlButton onClick={onSortView}>
-                <SortIcon />
+                <MindMapSortIcon />
               </ControlButton>
             </Controls>
             {/* <Panel position="top-left" className="header">

@@ -1,8 +1,8 @@
 // icon taken from grommet https://icons.grommet.io
 
-function DragIcon() {
+function MindMapDragIcon({ className = '' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24">
+    <svg viewBox="0 0 24 24" className={className}>
       <path
         fill="none"
         stroke="#fff"
@@ -13,4 +13,4 @@ function DragIcon() {
   );
 }
 
-export default DragIcon;
+export default MindMapDragIcon;
