@@ -121,6 +121,7 @@ const MindMapNode: React.FC<NodeProps<NodeData>> = ({ id, data }) => {
       ) : (
         <div
           id={id}
+          className="border-black/10 bg-white dark:border-gray-900/50 dark:bg-gray-800 dark:text-gray-100 dark:text-gray-20"
           style={{
             width: 1000,
             height: 400,
@@ -128,21 +129,20 @@ const MindMapNode: React.FC<NodeProps<NodeData>> = ({ id, data }) => {
             zIndex: 10,
             display: 'flex',
             borderRadius: '2px',
-            border: '1px solid #000000',
-            background: '#fff',
+            border: '1px solid',
             padding: 0,
             margin: 0,
             pointerEvents: 'all',
           }}
         >
-          <div className="mindMapDragHandle dark bg-black">
+          <div className="mindMapDragHandle bg-black text-white dark:bg-white dark:text-black">
             <MindMapDragIcon />
           </div>
           <div
+            className="border-black/10 bg-white dark:border-gray-900/50 dark:bg-gray-800 dark:text-gray-20"
             style={{
               zIndex: 20,
               color: '#333',
-              background: '#fff',
               padding: '8px',
               margin: 0,
               display: 'flex',

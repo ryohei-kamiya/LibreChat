@@ -2037,6 +2037,45 @@ html {
   z-index: 0;
 }
 
+.dark .react-flow__controls {
+  --tw-border-opacity: 1;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+  background-color: rgba(52, 53, 65, var(--tw-bg-opacity));
+  border-color: rgba(86, 88, 105, var(--tw-border-opacity));
+  border-width: 1px;
+  color: rgba(255, 255, 255, var(--tw-text-opacity));
+}
+
+.dark .react-flow__controls-button svg path {
+  fill: rgba(255, 255, 255, var(--tw-text-opacity));
+}
+
+.dark .react-flow__controls:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgba(64, 65, 79, var(--tw-bg-opacity));
+}
+
+.dark .react-flow__edge {
+  --tw-border-opacity: 1;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+  background-color: rgba(52, 53, 65, var(--tw-bg-opacity));
+  border-color: rgba(86, 88, 105, var(--tw-border-opacity));
+  border-width: 1px;
+  color: rgba(255, 255, 255, var(--tw-text-opacity));
+}
+
+.dark .react-flow__edge svg path {
+  fill: rgba(255, 255, 255, var(--tw-text-opacity));
+}
+
+.dark .react-flow__panel {
+  --tw-bg-opacity: 1;
+  background-color: rgba(52, 53, 65, var(--tw-bg-opacity));
+  color: white;
+}
+
 .mindMapCloseMagnifiedNodeButton {
   width: 42px;
   height: 42px;

@@ -110,8 +110,7 @@ function MindMapMagnifiedNode() {
         zIndex: 1000,
         display: 'flex',
         borderRadius: '2px',
-        border: '1px solid #000000',
-        background: '#fff',
+        border: '1px solid',
         padding: 0,
         margin: 0,
         pointerEvents: 'all',
@@ -125,8 +124,7 @@ function MindMapMagnifiedNode() {
         zIndex: 1000,
         display: 'none',
         borderRadius: '2px',
-        border: '1px solid #000000',
-        background: '#fff',
+        border: '1px solid',
         padding: 0,
         margin: 0,
         pointerEvents: 'all',
@@ -160,23 +158,24 @@ function MindMapMagnifiedNode() {
       ) : (
         <div
           id={mindMapMagnifiedNodeId}
+          className="border-black/10 bg-white dark:border-gray-900/50 dark:bg-gray-800 dark:text-gray-100 dark:text-gray-20"
           style={style}
           onPointerUp={(e) => {
             e.stopPropagation();
           }}
         >
           <div
-            className="mindMapCloseMagnifiedNodeButton dark bg-black"
+            className="mindMapCloseMagnifiedNodeButton bg-black text-white dark:bg-white dark:text-black"
             onPointerUp={handlePointerUp}
           >
             ESC
             <CrossIcon className="mindMapCloseMagnifiedNodeButtonIcon" />
           </div>
           <div
+            className="border-black/10 bg-white dark:border-gray-900/50 dark:bg-gray-800 dark:text-gray-100 dark:text-gray-20"
             style={{
               zIndex: 20,
               color: '#333',
-              background: '#fff',
               padding: '8px',
               margin: 0,
               display: 'flex',
