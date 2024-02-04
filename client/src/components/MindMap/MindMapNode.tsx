@@ -9,7 +9,7 @@ import store from '~/store';
 
 import { Handle, Position, NodeProps } from 'reactflow';
 
-import MindMapDragIcon from '~/components/svg/MindMapDragIcon';
+import { MindMapDragIcon } from '~/components/svg/';
 
 function MindMapNodeMessages({ id, data }: { id: string; data: NodeData }) {
   const { messagesTree } = data;

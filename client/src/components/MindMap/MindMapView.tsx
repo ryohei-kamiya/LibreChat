@@ -8,9 +8,8 @@ import { useGetFiles } from '~/data-provider';
 import { buildTree, mapFiles } from '~/utils';
 import useMindMapHelpers from '~/hooks/useMindMapHelpers';
 import store from '~/store';
-import MindMapSortIcon from '../svg/MindMapSortIcon';
 
-import { Spinner } from '~/components/svg';
+import { Spinner, MindMapSortIcon } from '~/components/svg';
 
 import ReactFlow, {
   Edge,

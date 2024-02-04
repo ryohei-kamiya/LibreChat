@@ -7,7 +7,7 @@ import { CSSTransition } from 'react-transition-group';
 import type { NodeData } from '~/store/mindMapNode';
 import { useRecoilValue } from 'recoil';
 import store from '~/store';
-import CrossIcon from '~/components/svg/CrossIcon';
+import { CrossIcon } from '~/components/svg/';
 
 function MindMapNodeMessages({ id, data }: { id: string; data: NodeData }) {
   const { messagesTree } = data;
