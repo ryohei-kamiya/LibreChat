@@ -2103,7 +2103,8 @@ html {
 
 .mindMapDragHandle {
   width: 42px;
-  margin: auto;
+  margin: 0 auto;
+  display: flex;
   pointer-events: all;
   border-radius: 2px 0 0 2px;
   z-index: 20;
