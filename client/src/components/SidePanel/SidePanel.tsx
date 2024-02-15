@@ -6,12 +6,13 @@ import { EModelEndpoint, type TEndpointsConfig } from 'librechat-data-provider';
 import type { NavLink } from '~/common';
 import { ResizableHandleAlt, ResizablePanel, ResizablePanelGroup } from '~/components/ui/Resizable';
 import { TooltipProvider, Tooltip } from '~/components/ui/Tooltip';
-import { Blocks, AttachmentIcon } from '~/components/svg';
+import { Blocks, AttachmentIcon, ViewIcon } from '~/components/svg';
 import { useMediaQuery, useLocalStorage } from '~/hooks';
 import { Separator } from '~/components/ui/Separator';
 import NavToggle from '~/components/Nav/NavToggle';
 import PanelSwitch from './Builder/PanelSwitch';
 import FilesPanel from './Files/Panel';
+import ViewsPanel from './Views/Panel';
 import Switcher from './Switcher';
 import { cn } from '~/utils';
 import Nav from './Nav';
@@ -66,6 +67,14 @@ export default function SidePanel({
       icon: AttachmentIcon,
       id: 'files',
       Component: FilesPanel,
+    });
+
+    links.push({
+      title: 'com_sidepanel_views',
+      label: '',
+      icon: ViewIcon,
+      id: 'views',
+      Component: ViewsPanel,
     });
 
     return links;
