@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
+import { GripVertical } from 'lucide-react';
 import Message from '~/components/Messages/Message';
 import ScrollToBottom from '~/components/Messages/ScrollToBottom';
 import { useScreenshot, useMessageScrolling } from '~/hooks';
@@ -8,8 +9,6 @@ import type { NodeData } from '~/store/mindMapNode';
 import store from '~/store';
 
 import { Handle, Position, NodeProps } from 'reactflow';
-
-import { MindMapDragIcon } from '~/components/svg/';
 
 function MindMapNodeMessages({ id, data }: { id: string; data: NodeData }) {
   const { messagesTree } = data;
@@ -136,7 +135,7 @@ const MindMapNode: React.FC<NodeProps<NodeData>> = ({ id, data }) => {
           }}
         >
           <div className="mindMapDragHandle bg-black text-white dark:bg-white dark:text-black">
-            <MindMapDragIcon />
+            <GripVertical className="m-auto h-8 w-8" />
           </div>
           <div
             className="border-black/10 bg-white dark:border-gray-900/50 dark:bg-gray-800 dark:text-gray-20"

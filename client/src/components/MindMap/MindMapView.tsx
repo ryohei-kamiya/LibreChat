@@ -1,15 +1,18 @@
 import Dagre from '@dagrejs/dagre';
 import { memo, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
 import type { TMessage } from 'librechat-data-provider';
 import { useGetMessagesByConvoId } from 'librechat-data-provider/react-query';
-import { useGetFiles } from '~/data-provider';
-import { buildTree, mapFiles } from '~/utils';
+import { ChatContext, useFileMapContext } from '~/Providers';
+import Presentation from '~/components/Chat/Presentation';
+import { useChatHelpers, useSSE } from '~/hooks';
+import { buildTree } from '~/utils';
 import useMindMapHelpers from '~/hooks/useMindMapHelpers';
 import store from '~/store';
 
-import { Spinner, MindMapSortIcon } from '~/components/svg';
+import { Spinner } from '~/components/svg';
+import MindMapSortIcon from './MindMapSortIcon';
 
 import ReactFlow, {
   Edge,
@@ -201,8 +204,13 @@ function convertMessagesTreeToNodesAndEdges(
   }
 }
 
-function Flow() {
+function Flow({ index = 0 }: { index?: number }) {
   const { conversationId } = useParams();
+
+  const submissionAtIndex = useRecoilValue(store.submissionByIndex(0));
+  useSSE(submissionAtIndex);
+
+  const chatHelpers = useChatHelpers(index, conversationId);
 
   const {
     onNodesChange,
@@ -222,9 +230,7 @@ function Flow() {
     setMindMapEdges(layoutedNodesAndEdges.edges);
   };
 
-  const { data: fileMap } = useGetFiles({
-    select: mapFiles,
-  });
+  const fileMap = useFileMapContext();
 
   const { data: messagesTree = null, isLoading } = useGetMessagesByConvoId(conversationId ?? '', {
     select: (data) => {
@@ -251,41 +257,45 @@ function Flow() {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      {!mindMapNodes || mindMapNodes.length == 0 || isLoading ? (
-        <Spinner className="m-auto dark:text-white" />
-      ) : (
-        <>
-          <ReactFlow
-            nodes={mindMapNodes}
-            edges={mindMapEdges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            nodeTypes={nodeTypes}
-            edgeTypes={edgeTypes}
-            nodeOrigin={nodeOrigin}
-            defaultEdgeOptions={defaultEdgeOptions}
-            connectionLineStyle={connectionLineStyle}
-            connectionLineType={ConnectionLineType.SimpleBezier}
-            fitView={true}
-            minZoom={0.01}
-            proOptions={{
-              hideAttribution: false,
-            }}
-          >
-            <Controls showInteractive={true}>
-              <ControlButton onClick={onSortView}>
-                <MindMapSortIcon />
-              </ControlButton>
-            </Controls>
-            {/* <Panel position="top-left" className="header">
-              Mind Map
-            </Panel> */}
-          </ReactFlow>
-          <MindMapMagnifiedNode />
-        </>
-      )}
-    </div>
+    <ChatContext.Provider value={chatHelpers}>
+      <Presentation useSidePanel={true}>
+        <div style={{ width: '100%', height: '100%' }}>
+          {!mindMapNodes || mindMapNodes.length == 0 || isLoading ? (
+            <Spinner className="m-auto dark:text-white" />
+          ) : (
+            <>
+              <ReactFlow
+                nodes={mindMapNodes}
+                edges={mindMapEdges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                nodeTypes={nodeTypes}
+                edgeTypes={edgeTypes}
+                nodeOrigin={nodeOrigin}
+                defaultEdgeOptions={defaultEdgeOptions}
+                connectionLineStyle={connectionLineStyle}
+                connectionLineType={ConnectionLineType.SimpleBezier}
+                fitView={true}
+                minZoom={0.01}
+                proOptions={{
+                  hideAttribution: false,
+                }}
+              >
+                <Controls showInteractive={true}>
+                  <ControlButton onClick={onSortView}>
+                    <MindMapSortIcon />
+                  </ControlButton>
+                </Controls>
+                {/* <Panel position="top-left" className="header">
+                  Mind Map
+                </Panel> */}
+              </ReactFlow>
+              <MindMapMagnifiedNode />
+            </>
+          )}
+        </div>
+      </Presentation>
+    </ChatContext.Provider>
   );
 }
 
