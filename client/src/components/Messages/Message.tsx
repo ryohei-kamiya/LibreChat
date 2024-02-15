@@ -94,7 +94,7 @@ export default function Message(props: TMessageProps) {
     : 'bg-gray-50 dark:bg-gray-1000 dark:text-gray-70';
 
   const messageProps = {
-    className: message.bg ? message.bg : cn(commonClasses, uniqueClasses),
+    className: cn(commonClasses, uniqueClasses),
     titleclass: '',
   };
 
