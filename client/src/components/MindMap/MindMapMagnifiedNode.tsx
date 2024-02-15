@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import useMindMapHelpers from '~/hooks/useMindMapHelpers';
-import Message from '~/components/Messages/Message';
+import Message from './Messages/Message';
 import ScrollToBottom from '~/components/Messages/ScrollToBottom';
 import { useScreenshot, useMessageScrolling } from '~/hooks';
 import { CSSTransition } from 'react-transition-group';
@@ -53,10 +53,7 @@ function MindMapNodeMessages({ id, data }: { id: string; data: NodeData }) {
                   <Message
                     key={message.messageId}
                     conversation={conversation}
-                    message={{
-                      ...message,
-                      bg: 'w-full text-gray-800 group border-black/10 dark:border-gray-900/50 dark:text-gray-100 bg-white dark:bg-gray-800 dark:text-gray-20',
-                    }}
+                    message={message}
                     currentEditId={currentEditId}
                     setCurrentEditId={setCurrentEditId}
                     siblingIdx={0}
